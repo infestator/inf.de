@@ -25,9 +25,11 @@ class AppMenu(gtk.Menu):
                 menuItem.set_label(label)
                 return menuItem
             
+            self.processes = list()
             def launch_callback(menuItem, command):
                 try:
-                    subprocess.call(command);
+                    process = subprocess.Popen(['/bin/sh', '-c', command]);
+                    self.processes.append(process);
                 except:
                     pass
             
@@ -62,3 +64,7 @@ class AppMenu(gtk.Menu):
         
     def get_applications_icon(self):
         return self.__applications_icon
+    
+    def stop(self):
+        for process in self.processes:
+            process.kill()
