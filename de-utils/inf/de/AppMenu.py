@@ -6,6 +6,7 @@ import xdg.Menu
 class AppMenu(gtk.Menu):
 
     def __init__(self, config):
+        gtk.Menu.__init__(self)
         
         def traverseXDGMenu(xdgEntry):
             def createMenuItem(label, iconName):
@@ -38,8 +39,8 @@ class AppMenu(gtk.Menu):
                 menu = gtk.Menu()
                 item.set_submenu(menu);
                 print xdgEntry.getName()
-                for xdgMenuItem in xdgEntry.getEntries():
-                    menu.append(traverseXDGMenu(xdgMenuItem))
+                for xdgMenuEntry in xdgEntry.getEntries():
+                    menu.append(traverseXDGMenu(xdgMenuEntry))
             elif isinstance(xdgEntry, xdg.Menu.Separator):
                 item = gtk.SeparatorMenuItem()
             item.show()
@@ -47,7 +48,8 @@ class AppMenu(gtk.Menu):
         
         xdgMenu = xdg.Menu.parse(config.get_menu_file());
         for xdgMenuEntry in xdgMenu.getEntries():
-            self.append(traverseXDGMenu(xdgMenuEntry))
+            item = traverseXDGMenu(xdgMenuEntry)
+            self.append(item)
         
         self.__applications_icon = xdgMenu.getIcon();
         self.show()

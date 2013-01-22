@@ -13,16 +13,19 @@ class DEUtils(threading.Thread):
         appMenu = AppMenu(config)
         
         statusIcon = gtk.StatusIcon()
-        statusIcon.set_visible(True)
         statusIcon.set_from_icon_name(appMenu.get_applications_icon())
+        statusIcon.set_name("DEUtils");
+        statusIcon.set_title('DEUtils')
+        statusIcon.set_tooltip('DEUtils')
+        statusIcon.set_visible(True)
         
-        utilsMenu = gtk.Menu();
+        #utilsMenu = gtk.Menu();
 
-        statusIcon.connect("activate", lambda: self.show_applications_menu())
-        statusIcon.connect("popup-menu", lambda: self.show_utils_menu())
+        statusIcon.connect("activate", lambda x, y: self.show_applications_menu())
+        #statusIcon.connect("popup-menu", lambda: self.show_utils_menu())
     
     def show_applications_menu(self):
-        print 'hello'
+        print 'apps'
         
     def show_utils_menu(self):
         print 'utils';
