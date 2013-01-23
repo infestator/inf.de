@@ -1,16 +1,20 @@
 import gtk
-import subprocess
 import xdg.IconTheme
 import xdg.Menu
+from inf.de import Launcher
+import re
 
 class AppMenu(gtk.Menu):
 
-    def __init__(self, config):
+    def __init__(self, menu_file, icon_theme):
         gtk.Menu.__init__(self)
         
+        r1 = re.compile('(?<!%)%[fFuUdDnNickvm]')
+        r2 = re.compile('%%')
+
         def traverseXDGMenu(xdgEntry):
             def createMenuItem(label, iconName):
-                iconPath = xdg.IconTheme.getIconPath(iconName, None, config.get_icon_theme())
+                iconPath = xdg.IconTheme.getIconPath(iconName, None, icon_theme)
                 if iconPath is not None:
                     iconSource = gtk.IconSource()
                     iconSource.set_filename (iconPath)
@@ -25,17 +29,10 @@ class AppMenu(gtk.Menu):
                 menuItem.set_label(label)
                 return menuItem
             
-            self.processes = list()
-            def launch_callback(menuItem, command):
-                try:
-                    process = subprocess.Popen(['/bin/sh', '-c', command]);
-                    self.processes.append(process);
-                except:
-                    pass
-            
             if isinstance(xdgEntry, xdg.Menu.MenuEntry):
                 item = createMenuItem(xdgEntry.DesktopEntry.getName(), xdgEntry.DesktopEntry.getIcon())
-                item.connect("activate", launch_callback, xdgEntry.DesktopEntry.getExec())
+                command = r2.sub('%', r1.sub('', xdgEntry.DesktopEntry.getExec())).rstrip()
+                item.connect("activate", lambda menuItem, command: Launcher.launch(xdgEntry, command), command)
             elif isinstance(xdgEntry, xdg.Menu.Menu):
                 item = createMenuItem(xdgEntry.getName(), xdgEntry.getIcon())
                 menu = gtk.Menu()
@@ -48,7 +45,7 @@ class AppMenu(gtk.Menu):
             item.show()
             return item
         
-        xdgMenu = xdg.Menu.parse(config.get_menu_file());
+        xdgMenu = xdg.Menu.parse(menu_file);
         for xdgMenuEntry in xdgMenu.getEntries():
             item = traverseXDGMenu(xdgMenuEntry)
             self.append(item)
@@ -64,7 +61,3 @@ class AppMenu(gtk.Menu):
         
     def get_applications_icon(self):
         return self.__applications_icon
-    
-    def stop(self):
-        for process in self.processes:
-            process.kill()
