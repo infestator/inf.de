@@ -1,25 +1,37 @@
-import socket, os
+import os
+
 from inf.de.DEUtils import DEUtils
 
 from inf.de.AppMenu import AppMenu
+from inf.de.IPC import CommandServer
+from inf.de import IPC
+import gtk
+
+gtk.threads_init()
+
+class Listener(IPC.CommandListener):
+    
+    def accept(self, command):
+        gtk.threads_enter()
+        appMenu.popup(None, None, None, 0, 0)
+        gtk.threads_leave()
 
 appMenu = AppMenu('/etc/xdg/menus/gnome-applications.menu', 'gnome')
-DEUtils(appMenu).start()
 
-s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+socketFile = os.environ['HOME'] + '/appsocket'
+
 try:
-    os.remove("/tmp/socketname")
-except OSError:
+    os.remove(file)
+except:
     pass
 
-s.bind("/tmp/socketname")
-s.listen(1)
-conn, addr = s.accept()
-while 1:
-    data = conn.recv(1024)
-    if not data:
-        break
-    else:
-        appMenu.popup(None, None, None, 0, 0)
+svr = CommandServer(socketFile, Listener())
+svr.start()
 
-conn.close()
+DEUtils(appMenu)
+
+gtk.threads_enter()
+gtk.main()
+gtk.threads_leave()
+
+svr.stop()
