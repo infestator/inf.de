@@ -1,7 +1,7 @@
 import gtk
 import xdg.IconTheme
 import xdg.Menu
-from inf.de import Launcher
+import Launcher
 import re
 
 class AppMenu(gtk.Menu):

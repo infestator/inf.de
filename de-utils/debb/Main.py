@@ -1,10 +1,9 @@
 import os
 
-from inf.de.DEUtils import DEUtils
+import DEUtils
 
-from inf.de.AppMenu import AppMenu
-from inf.de.IPC import CommandServer
-from inf.de import IPC
+import AppMenu
+import IPC
 import gtk
 
 gtk.threads_init()
@@ -25,7 +24,7 @@ try:
 except:
     pass
 
-svr = CommandServer(socketFile, Listener())
+svr = IPC.CommandServer(socketFile, Listener())
 svr.start()
 
 DEUtils(appMenu)

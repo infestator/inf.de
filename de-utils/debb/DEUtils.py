@@ -1,6 +1,6 @@
 import threading
 import gtk;
-from inf.de import Launcher
+import Launcher
 
 class DEUtils(threading.Thread):
     

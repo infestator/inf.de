@@ -1,0 +1,19 @@
+! $Id$
+
+! load color-specific resources for clients that have them
+#ifdef COLOR
+*customization: -color
+#endif
+
+! make Xaw (Athena widget set) clients understand the delete key
+! this causes problems with some non-Xaw apps, use with care
+! *Text.translations: #override ~Shift ~Meta <Key>Delete: delete-next-character()
+
+Rxvt*background: Black
+Rxvt*foreground: Grey
+Rxvt*font: -*-terminus-medium-*-*-*-14-*-*-*-*-*-*-u
+Rxvt*color4: RoyalBlue
+Rxvt*color12: RoyalBlue
+Rxvt*scrollBar_right: true
+Rxvt*buffered: true
+Rxvt*searchable-scrollback: C-f
