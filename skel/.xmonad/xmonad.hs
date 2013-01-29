@@ -1,6 +1,7 @@
 import Control.Monad (liftM2)
 import Data.Ratio ((%))
 import XMonad
+import XMonad.Actions.FloatKeys
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ICCCMFocus
 import XMonad.Hooks.ManageDocks
@@ -52,7 +53,6 @@ main = do
         { workspaces = ["1:home", "2:web", "3:dev", "4:comm", "5:media", "6:tmp", "7", "8", "9", "0", "-", "="]
         , manageHook = myManageHook <+> manageDocks <+> manageHook defaultConfig
         , layoutHook = myLayoutHook
-        , startupHook = setWMName "LG3D"
         , logHook = dynamicLogWithPP xmobarPP
                        { ppOutput = hPutStrLn xmproc
                        , ppTitle = xmobarColor "green" "" . shorten 50
@@ -72,4 +72,9 @@ main = do
         , (xK_MasterMute, spawn "amixer set Master toggle")
         , (xK_CaptureLower, spawn "amixer set Capture 1- unmute")
         , (xK_CaptureRaise, spawn "amixer set Capture 1+ unmute")
+        -- Windows move&resize 
+        , ((mod4Mask,               xK_d     ), withFocused (keysMoveWindow (10,0)))
+        , ((mod4Mask,               xK_a     ), withFocused (keysMoveWindow (-10,0)))
+        , ((mod4Mask,               xK_w     ), withFocused (keysMoveWindow (0,-10)))
+        , ((mod4Mask,               xK_s     ), withFocused (keysMoveWindow (0,10)))
         ]

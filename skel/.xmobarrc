@@ -1,15 +1,26 @@
-Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
+Config { font = "-*-terminus-bold-*-*-*-18-*-*-*-*-*-*-u"
        , bgColor = "black"
        , fgColor = "grey"
        , position = TopSize L 90 20
        , commands = [ Run Weather "ULLI" ["-t"," <tempC>C","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 1800
-                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 3
+                    , Run Cpu ["-L",       "10",
+                               "-H",       "75",
+                               "--normal", "green",
+                               "--high",   "red"] 3
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Date "%Y-%m-%dT%H:%M:%S" "date" 10
                     , Run StdinReader
+                    , Run BatteryP ["BAT0"]
+                                   ["-t", "Bat: <acstatus><left>%",
+                                    "-L", "10", "-H", "80", "-p", "3",
+                                    "--", "-O", "<fc=green>+</fc>", "-o", "<fc=red>-</fc>",
+                                    "-L", "-15", "-H", "-5",
+                                    "-l", "red", "-m", "blue", "-h", "green",
+                                    "-f", "ADP0/online"]
+                                   10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#ee9a00>%date%</fc> | %ULLI%"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap% | %battery%   <fc=#ee9a00>%date%</fc> | %ULLI%"
        }
