@@ -2,6 +2,7 @@ import Control.Monad (liftM2)
 import Data.Ratio ((%))
 import XMonad
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ICCCMFocus
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.Accordion

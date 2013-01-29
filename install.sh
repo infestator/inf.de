@@ -1,12 +1,20 @@
 #!/bin/sh
 
-S=${1}
+SKEL=${1}
 
-if [ -n "${S}" ] | [ ! -d "${S}" ]; then
-	echo "Syntax: $(basename "${S}") <skel_dir>"
+if [ -n "${SKEL}" ] | [ ! -d "${SKEL}" ]; then
+	echo "Syntax: $(basename "${0}") <skel_dir>"
 	exit
 fi
 
-for F in $(ls -a ${S} | egrep -v '^\.*$'); do
-	cp -ivr ${S}/${F} ${HOME}
+for FILE in $(find ${SKEL} -type f | sed -e "s#${SKEL}/##"); do
+    SRC=${SKEL}/${FILE}
+    DST=${HOME}/${FILE}
+    if [ "$(diff ${SRC} ${DST} | wc -l)" != "0" ]; then
+        DST_DIR=$(dirname ${DST})
+        if [ ! -d ${DST_DIR} ]; then
+            mkdir -p ${DST_DIR}
+        fi
+    	cp -v ${SRC} ${DST}
+    fi
 done
