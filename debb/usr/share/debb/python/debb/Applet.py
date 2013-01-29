@@ -1,8 +1,9 @@
 import threading
 import gtk;
 import Launcher
+import Menu
 
-class DEUtils(threading.Thread):
+class Applet(threading.Thread):
     
     def __init__(self, appMenu):
         threading.Thread.__init__(self)
@@ -33,3 +34,10 @@ class DEUtils(threading.Thread):
     def stop(self, appMenu):
         Launcher.kill_all()
         gtk.main_quit()
+
+def start():
+    menu = Menu.AppMenu("/etc/xdg/menus/gnome-applications.menu", "gnome")
+    Applet(menu).start()
+    
+if __name__ == "__main__":
+    start()

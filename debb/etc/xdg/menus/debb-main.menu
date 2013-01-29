@@ -4,7 +4,7 @@
 <Menu>
 
 	<Name>Applications</Name>
-	<Directory>lxde-menu-applications.directory</Directory>
+	<Directory>debb-menu-applications.directory</Directory>
 
 	<!-- Read standard .directory and .desktop file locations -->
 	<DefaultAppDirs/>
@@ -16,7 +16,7 @@
 	<!-- Accessories submenu -->
 	<Menu>
 		<Name>Accessories</Name>
-		<Directory>lxde-utility.directory</Directory>
+		<Directory>debb-utility.directory</Directory>
 		<Include>
 			<And>
 				<Category>Utility</Category>
@@ -33,7 +33,7 @@
 	<!-- Accessibility submenu -->
 	<Menu>
 		<Name>Universal Access</Name>
-		<Directory>lxde-utility-accessibility.directory</Directory>
+		<Directory>debb-utility-accessibility.directory</Directory>
 		<Include>
 			<And>
 				<Category>Accessibility</Category>
@@ -45,7 +45,7 @@
 	<!-- Development Tools -->
 	<Menu>
 		<Name>Development</Name>
-		<Directory>lxde-development.directory</Directory>
+		<Directory>debb-development.directory</Directory>
 		<Include>
 			<And>
 				<Category>Development</Category>
@@ -57,7 +57,7 @@
 	<!-- Education -->
 	<Menu>
 		<Name>Education</Name>
-		<Directory>lxde-education.directory</Directory>
+		<Directory>debb-education.directory</Directory>
 		<Include>
 			<And>
 				<Category>Education</Category>
@@ -68,7 +68,7 @@
 	<!-- Games -->
 	<Menu>
 		<Name>Games</Name>
-		<Directory>lxde-game.directory</Directory>
+		<Directory>debb-game.directory</Directory>
 		<Include>
 			<And>
 				<Category>Game</Category>
@@ -79,7 +79,7 @@
 	<!-- Graphics -->
 	<Menu>
 		<Name>Graphics</Name>
-		<Directory>lxde-graphics.directory</Directory>
+		<Directory>debb-graphics.directory</Directory>
 		<Include>
 			<And>
 				<Category>Graphics</Category>
@@ -91,7 +91,7 @@
 	<!-- Internet -->
 	<Menu>
 		<Name>Internet</Name>
-		<Directory>lxde-network.directory</Directory>
+		<Directory>debb-network.directory</Directory>
 		<Include>
 			<And>
 				<Category>Network</Category>
@@ -102,7 +102,7 @@
 	<!-- Multimedia -->
 	<Menu>
 		<Name>Multimedia</Name>
-		<Directory>lxde-audio-video.directory</Directory>
+		<Directory>debb-audio-video.directory</Directory>
 		<Include>
 			<And>
 				<Category>AudioVideo</Category>
@@ -113,18 +113,17 @@
 	<!-- Office -->
 	<Menu>
 		<Name>Office</Name>
-		<Directory>lxde-office.directory</Directory>
+		<Directory>debb-office.directory</Directory>
 		<Include>
 			<And>
 				<Category>Office</Category>
 			</And>
 		</Include>
-	</Menu> <!-- End Office -->
+	</Menu>
 
-	<!-- System Tools-->
 	<Menu>
 		<Name>System</Name>
-		<Directory>lxde-system-tools.directory</Directory>
+		<Directory>debb-system-tools.directory</Directory>
 		<Include>
 			<And>
 				<Category>System</Category>
@@ -132,12 +131,11 @@
 				<Not><Category>PackageManager</Category></Not>
 			</And>
 		</Include>
-	</Menu>	 <!-- End System Tools -->
+	</Menu>
 
-	<!-- Other -->
 	<Menu>
 		<Name>Other</Name>
-		<Directory>lxde-other.directory</Directory>
+		<Directory>debb-other.directory</Directory>
 		<OnlyUnallocated/>
 		<Include>
 			<And>
@@ -146,11 +144,11 @@
 				<Not><Category>Screensaver</Category></Not>
 			</And>
 		</Include>
-		</Menu> <!-- End Other -->
+		</Menu>
 
 	<Menu>
 		<Name>DesktopSettings</Name>
-		<Directory>lxde-settings.directory</Directory>
+		<Directory>debb-settings.directory</Directory>
 		<OnlyUnallocated/>
 		<Include>
 			<Or>
@@ -164,7 +162,7 @@
 			<Merge type="files"/>
 		</Layout>
 
-	</Menu> <!-- End Settings -->
+	</Menu>
 
 	<Layout>
 		<Merge type="files"/>
@@ -173,4 +171,4 @@
 		<Menuname>DesktopSettings</Menuname>
 	</Layout>
 
-</Menu> <!-- End Applications -->
+</Menu>

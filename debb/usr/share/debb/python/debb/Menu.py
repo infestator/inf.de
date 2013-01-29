@@ -33,7 +33,6 @@ class AppMenu(gtk.Menu):
                 item = createMenuItem(xdgEntry.getName(), xdgEntry.getIcon())
                 menu = gtk.Menu()
                 item.set_submenu(menu);
-                print xdgEntry.getName()
                 for xdgMenuEntry in xdgEntry.getEntries():
                     menu.append(traverseXDGMenu(xdgMenuEntry))
             elif isinstance(xdgEntry, xdg.Menu.Separator):
