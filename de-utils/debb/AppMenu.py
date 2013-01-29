@@ -2,16 +2,12 @@ import gtk
 import xdg.IconTheme
 import xdg.Menu
 import Launcher
-import re
 
 class AppMenu(gtk.Menu):
 
-    def __init__(self, menu_file, icon_theme):
+    def __init__(self, menu_file=None, icon_theme=None):
         gtk.Menu.__init__(self)
         
-        r1 = re.compile('(?<!%)%[fFuUdDnNickvm]')
-        r2 = re.compile('%%')
-
         def traverseXDGMenu(xdgEntry):
             def createMenuItem(label, iconName):
                 iconPath = xdg.IconTheme.getIconPath(iconName, None, icon_theme)
@@ -30,9 +26,9 @@ class AppMenu(gtk.Menu):
                 return menuItem
             
             if isinstance(xdgEntry, xdg.Menu.MenuEntry):
-                item = createMenuItem(xdgEntry.DesktopEntry.getName(), xdgEntry.DesktopEntry.getIcon())
-                command = r2.sub('%', r1.sub('', xdgEntry.DesktopEntry.getExec())).rstrip()
-                item.connect("activate", lambda menuItem, command: Launcher.launch(xdgEntry, command), command)
+                desktop_entry = xdgEntry.DesktopEntry
+                item = createMenuItem(desktop_entry.getName(), desktop_entry.getIcon())
+                item.connect("activate", lambda w: Launcher.launch(desktop_entry))
             elif isinstance(xdgEntry, xdg.Menu.Menu):
                 item = createMenuItem(xdgEntry.getName(), xdgEntry.getIcon())
                 menu = gtk.Menu()
@@ -53,11 +49,11 @@ class AppMenu(gtk.Menu):
         self.__applications_icon = xdgMenu.getIcon();
         self.show()
         
-        def tray_activate_callback():
-            self.menu.popup(None, None, None, 0, 0)
-            
-        def tray_menu_callback():
-            pass
-        
     def get_applications_icon(self):
         return self.__applications_icon
+
+if __name__ == "__main__":
+    menu = AppMenu("/etc/xdg/menus/gnome-applications.menu", "gnome")
+    menu.connect("hide", lambda w: gtk.main_quit())
+    menu.popup(None, None, None, 0, 0)
+    gtk.main()
