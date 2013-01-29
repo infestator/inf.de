@@ -17,6 +17,7 @@ URxvt.color12: RoyalBlue
 URxvt.scrollBar_right: true
 URxvt.buffered: true
 URxvt.searchable-scrollback: C-f
+URxvt.scrollstyle: plain
 
 URxvt.keysym.M-Down:        \033[1;3B
 URxvt.keysym.M-Up:          \033[1;3A
