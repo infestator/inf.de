@@ -3,6 +3,7 @@ import Data.Ratio ((%))
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.SetWMName
 import XMonad.Layout.Accordion
 import XMonad.Layout.Combo
 import XMonad.Layout.Grid
@@ -42,21 +43,15 @@ xK_CaptureLower=(mod4Mask,0x1008ff11)
 xK_CaptureRaise=(mod4Mask,0x1008ff13)
 xK_CaptureMute=(mod4Mask,0x1008ff12)
 
-exitHook :: IO ()
-exitHook = do
-    system "killall trayer"
-    return ()
-
 -- Main configuration
 
 main = do
-    spawn "/usr/bin/xscreensaver -no-splash"
-    spawn "/usr/bin/trayer --edge top --align right --widthtype percent --width 10 --height 20 --transparent true --alpha 0 --tint 0x000000 --SetDockType true --SetPartialStrut true"
     xmproc <- spawnPipe "/usr/bin/xmobar"
     xmonad $ defaultConfig
         { workspaces = ["1:home", "2:web", "3:dev", "4:comm", "5:media", "6:tmp", "7", "8", "9", "0", "-", "="]
         , manageHook = myManageHook <+> manageDocks <+> manageHook defaultConfig
         , layoutHook = myLayoutHook
+        , startupHook = setWMName "LG3D"
         , logHook = dynamicLogWithPP xmobarPP
                        { ppOutput = hPutStrLn xmproc
                        , ppTitle = xmobarColor "green" "" . shorten 50
@@ -76,7 +71,4 @@ main = do
         , (xK_MasterMute, spawn "amixer set Master toggle")
         , (xK_CaptureLower, spawn "amixer set Capture 1- unmute")
         , (xK_CaptureRaise, spawn "amixer set Capture 1+ unmute")
-        -- SESSION
---        , ((mod4Mask, xK_q), io (system "touch ~/.exit_flag" >> exitHook >> exitWith ExitSuccess))
---        , ((mod4Mask, xK_q), io exitHook >> restart "xmonad" True)
         ]
