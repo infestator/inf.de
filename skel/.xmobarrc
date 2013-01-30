@@ -2,7 +2,12 @@ Config { font = "-*-terminus-bold-*-*-*-18-*-*-*-*-*-*-u"
        , bgColor = "black"
        , fgColor = "grey"
        , position = TopSize L 90 20
-       , commands = [ Run Weather "ULLI" ["-t"," <tempC>C","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 1800
+       , commands = [ Run Weather "ULLI" [ "-t", " <tempC>C"
+                                         , "-L", "64"
+                                         , "-H", "77"
+                                         , "--normal", "green"
+                                         , "--high", "red"
+                                         , "--low", "lightblue"] 1800
                     , Run Cpu ["-L",       "10",
                                "-H",       "75",
                                "--normal", "green",
@@ -12,12 +17,17 @@ Config { font = "-*-terminus-bold-*-*-*-18-*-*-*-*-*-*-u"
                     , Run Date "%Y-%m-%dT%H:%M:%S" "date" 10
                     , Run StdinReader
                     , Run BatteryP ["BAT0"]
-                                   ["-t", "Bat: <acstatus><left>%",
-                                    "-L", "10", "-H", "80", "-p", "3",
-                                    "--", "-O", "<fc=green>+</fc>", "-o", "<fc=red>-</fc>",
-                                    "-L", "-15", "-H", "-5",
-                                    "-l", "red", "-m", "blue", "-h", "green",
-                                    "-f", "ADP0/online"]
+                                   [ "-t", "Bat: <acstatus><left>%"
+                                   , "-L", "10"
+                                   , "-H", "80"
+                                   , "-p", "3"
+                                   , "-l", "red"
+                                   , "-n", "lightblue"
+                                   , "-h", "green"
+                                   , "--"
+                                   , "-O", "<fc=green>+</fc>"
+                                   , "-o", "<fc=red>-</fc>"
+                                   , "-f", "ADP0/online"]
                                    10
                     ]
        , sepChar = "%"
