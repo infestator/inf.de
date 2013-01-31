@@ -36,6 +36,10 @@ URxvt.buffered: true
 ! Search Ctrl+F
 URxvt.searchable-scrollback: C-f
 
+! Shift-Up/Down scrolls single line
+URxvt.keysym.Shift-Up:      command:\033]720;1\007
+URxvt.keysym.Shift-Down:    command:\033]721;1\007
+
 ! Mouse bindings fix
 URxvt.keysym.M-Down:        \033[1;3B
 URxvt.keysym.M-Up:          \033[1;3A
