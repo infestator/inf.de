@@ -1,7 +1,7 @@
 import gtk
 import xdg.IconTheme
 import xdg.Menu
-import Launcher
+import launcher
 
 class AppMenu(gtk.Menu):
 
@@ -28,7 +28,7 @@ class AppMenu(gtk.Menu):
             if isinstance(xdgEntry, xdg.Menu.MenuEntry):
                 desktop_entry = xdgEntry.DesktopEntry
                 item = createMenuItem(desktop_entry.getName(), desktop_entry.getIcon())
-                item.connect("activate", lambda w: Launcher.launch(desktop_entry))
+                item.connect("activate", lambda w: launcher.launch(desktop_entry))
             elif isinstance(xdgEntry, xdg.Menu.Menu):
                 item = createMenuItem(xdgEntry.getName(), xdgEntry.getIcon())
                 menu = gtk.Menu()

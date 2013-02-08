@@ -23,7 +23,7 @@ URxvt.color14: rgb:3434/e2e2/e2e2
 URxvt.color15: rgb:eeee/eeee/ecec
 
 ! Fonts
-URxvt.font: -*-terminus-medium-*-*-*-18-*-*-*-*-*-*-u
+URxvt.font: -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1
 
 ! Scrollbar
 URxvt.scrollstyle: plain

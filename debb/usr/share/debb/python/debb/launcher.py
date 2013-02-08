@@ -2,7 +2,7 @@ import os
 import subprocess
 import re
 import shlex
-import time
+import gtk
 
 __processes = list()
 
@@ -25,6 +25,39 @@ class LaunchedProcess:
         
     def kill(self):
         self.__process.kill()
+
+class Launcher(gtk.Window):
+    
+    def __init__(self):
+        gtk.Window.__init__(self)
+        gtk.Window.set_position(self, gtk.WIN_POS_CENTER_ALWAYS)
+        gtk.Window.set_resizable(self, False)
+        
+        result = gtk.Menu()
+        result.show()
+
+        buf = gtk.TextBuffer()
+        buf.set_text(" ")
+        input_ = gtk.TextView(buf)
+        input_.show()
+        
+        def update(search_string):
+            pass
+        
+        def on_button_press(event):
+            if event.keyval == gtk.keysyms.Return:
+                input_.set_editable(False)
+            elif event.keyval == gtk.keysyms.Escape:
+                gtk.Window.emit(self, "delete-event", event)
+            else:
+                input_.set_editable(True)
+                update(buf.get_text(buf.get_start_iter(), buf.get_end_iter()))
+        
+        input_.connect("key-press-event", lambda w, e: on_button_press(e))
+        input_.connect("move-focus", lambda w, d: gtk.Window.emit(self, "delete-event", None))
+        gtk.Window.add(self, input_)
+        gtk.Window.show(self)
+        buf.set_text("")
 
 def get_processes():
     return __processes
@@ -76,10 +109,6 @@ def launch(desktop_entry, files=[], urls=[]):
     __processes.append(launched_process)
     return launched_process
 
-def launch_and_wait(desktop_entry, files=[], urls=[]):
-    process = launch(desktop_entry, files, urls)
-    return process.wait();
-
 def kill_all():
     for launched_process in __processes:
         launched_process.kill()
@@ -94,3 +123,8 @@ def __locate(command):
     raise Exception('Unable to find executable for ' + command)
 
 processes = property(get_processes, None, None, None)
+
+if __name__ == "__main__":
+    launcher = Launcher()
+    launcher.connect("delete-event", lambda w, x: gtk.main_quit())
+    gtk.main()

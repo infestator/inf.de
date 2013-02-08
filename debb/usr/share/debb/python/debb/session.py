@@ -1,20 +1,23 @@
 import xdg.DesktopEntry
 import os
-import Launcher
+import launcher
 import sys
 import time
 
+__autostart_entries = {}
+__application_entries = {}
+
 def start(window_manager="xmonad", restarts_count = 3):
-    applications_entries = __calculate_applications_entries()
-    autostart_entries = __calculate_autostart_entries().values()
-    for autostart_entry in autostart_entries:
+    __application_entries = __calculate_applications_entries()
+    __autostart_entries = __calculate_autostart_entries().values()
+    for autostart_entry in __autostart_entries:
         try:
             if autostart_entry.get("X-DEBB-Autostart-enabled") != "false":
-                Launcher.launch(autostart_entry)
+                launcher.launch(autostart_entry)
         except:
             pass
     while restarts_count > 0:
-        process = Launcher.launch(applications_entries[window_manager])
+        process = launcher.launch(__application_entries[window_manager])
         while True:
             time.sleep(0.5)
             poll = process.poll()
