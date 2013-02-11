@@ -3,6 +3,9 @@ import subprocess
 import re
 import shlex
 import gtk
+import gtk.gdk
+from dbus import gobject_service
+import gobject
 
 __processes = list()
 
@@ -32,6 +35,7 @@ class Launcher(gtk.Window):
         gtk.Window.__init__(self)
         gtk.Window.set_position(self, gtk.WIN_POS_CENTER_ALWAYS)
         gtk.Window.set_resizable(self, False)
+        gtk.Window.set_type_hint(self, gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         
         result = gtk.Menu()
         result.show()
@@ -40,9 +44,13 @@ class Launcher(gtk.Window):
         buf.set_text(" ")
         input_ = gtk.TextView(buf)
         input_.show()
+        model = gtk.ListStore(gobject.TYPE_STRING)
+        results = gtk.TreeView()
+        results.set_model(model)
+        results.show()
         
         def update(search_string):
-            pass
+            model.append([search_string])
         
         def on_button_press(event):
             if event.keyval == gtk.keysyms.Return:
@@ -55,7 +63,11 @@ class Launcher(gtk.Window):
         
         input_.connect("key-press-event", lambda w, e: on_button_press(e))
         input_.connect("move-focus", lambda w, d: gtk.Window.emit(self, "delete-event", None))
-        gtk.Window.add(self, input_)
+        vpane = gtk.VPaned()
+        vpane.add(input_)
+        vpane.add(results)
+        vpane.show()
+        gtk.Window.add(self, vpane)
         gtk.Window.show(self)
         buf.set_text("")
 

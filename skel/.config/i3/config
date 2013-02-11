@@ -29,6 +29,9 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
 
+# universal clipboard
+bindsym Control+Insert exec --no-startup-id xclip -o -selection primary | xclip -i -selection clipboard
+
 # kill focused window
 bindsym $mod+Shift+Q kill
 
@@ -110,7 +113,7 @@ bindsym XF86AudioLowerVolume exec amixer set Master 655- unmute
 bindsym Shift+XF86AudioRaiseVolume exec amixer set Master 1310+ unmute
 bindsym Shift+XF86AudioLowerVolume exec amixer set Master 1310- unmute
 
-bindsym $mod+L exec i3lock
+bindsym $mod+L exec i3lock -c 000000
 
 # reload the configuration file
 bindsym $mod+Shift+C reload
