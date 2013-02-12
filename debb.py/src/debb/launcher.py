@@ -33,7 +33,7 @@ class Launcher(gtk.Window):
     
     def __init__(self):
         gtk.Window.__init__(self)
-        gtk.Window.set_position(self, gtk.WIN_POS_CENTER_ALWAYS)
+        gtk.Window.set_position(self, gtk.WIN_POS_MOUSE)
         gtk.Window.set_resizable(self, False)
         gtk.Window.set_type_hint(self, gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         
@@ -41,35 +41,44 @@ class Launcher(gtk.Window):
         result.show()
 
         buf = gtk.TextBuffer()
-        buf.set_text(" ")
         input_ = gtk.TextView(buf)
         input_.show()
         model = gtk.ListStore(gobject.TYPE_STRING)
-        results = gtk.TreeView()
-        results.set_model(model)
+        results = gtk.TreeView(model)
+        column = gtk.TreeViewColumn()
+        results.append_column(column)
+        results.set_headers_visible(False)
+#        results.set_model(model)
         results.show()
         
         def update(search_string):
             model.append([search_string])
         
+        def close(event=None):
+            gtk.Window.emit(self, "delete-event", event)
+        
         def on_button_press(event):
             if event.keyval == gtk.keysyms.Return:
                 input_.set_editable(False)
             elif event.keyval == gtk.keysyms.Escape:
-                gtk.Window.emit(self, "delete-event", event)
+                close(event)
+            elif event.keyval == gtk.keysyms.Down:
+                pass
+            elif event.keyval == gtk.keysyms.Up:
+                pass
             else:
                 input_.set_editable(True)
                 update(buf.get_text(buf.get_start_iter(), buf.get_end_iter()))
         
         input_.connect("key-press-event", lambda w, e: on_button_press(e))
-        input_.connect("move-focus", lambda w, d: gtk.Window.emit(self, "delete-event", None))
+        input_.connect("move-focus", lambda w, d: close())
         vpane = gtk.VPaned()
         vpane.add(input_)
         vpane.add(results)
         vpane.show()
         gtk.Window.add(self, vpane)
+        gtk.Window.set_focus_child(self, vpane)
         gtk.Window.show(self)
-        buf.set_text("")
 
 def get_processes():
     return __processes
