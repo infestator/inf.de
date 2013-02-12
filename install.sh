@@ -10,10 +10,10 @@ fi
 for FILE in $(find ${SKEL} -type f | sed -e "s#${SKEL}/##"); do
     SRC=${SKEL}/${FILE}
     DST=${HOME}/${FILE}
-    if [ "$(diff ${SRC} ${DST} | wc -l)" != "0" ]; then
-        DST_DIR=$(dirname ${DST})
-        if [ ! -d ${DST_DIR} ]; then
-            mkdir -p ${DST_DIR}
+    if [ ! -f "${DST}" ] || [ "$(diff ${SRC} ${DST} | wc -l)" != "0" ]; then
+        DST_DIR=$(dirname "${DST}")
+        if [ ! -d "${DST_DIR}" ]; then
+            mkdir -p "${DST_DIR}"
         fi
     	cp -v ${SRC} ${DST}
     fi
