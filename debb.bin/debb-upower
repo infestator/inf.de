@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DEBB_HOME="$(dirname $0)/.."
+PYTHONPATH=$DEBB_HOME/share/debb/python python -c "import debb.session; debb.upower.start()"

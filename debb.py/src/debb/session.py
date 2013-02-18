@@ -7,7 +7,7 @@ import time
 __autostart_entries = {}
 __application_entries = {}
 
-def start(window_manager="xmonad", restarts_count = 3):
+def start(window_manager="i3", restarts_count = 3):
     __application_entries = __calculate_applications_entries()
     __autostart_entries = __calculate_autostart_entries().values()
     for autostart_entry in __autostart_entries:
@@ -60,4 +60,4 @@ if __name__ == "__main__":
         start(sys.argv[1])
     else:
         start()
-    
+
