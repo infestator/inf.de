@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=DEBB Applet
+Exec=debb-applet
+Type=Application
+NoDisplay=True
+X-Desktop-File-Install-Version=0.20

@@ -34,7 +34,7 @@ def _run():
         if is_lid_present():
             if is_lid_closed():
                 suspend()
-        time.sleep(0.5);
+        time.sleep(0.1);
 
 def start():
     threading.Thread(target=_run).start()

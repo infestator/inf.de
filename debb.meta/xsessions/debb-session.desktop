@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=DEBB Session
+Comment=DEBB Session
+Exec=debb-session
+Type=XSession
