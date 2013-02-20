@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=DEBB Applet
-Exec=debb-applet
+Name=DEBB Upower
+Exec=debb-upower
 Type=Application
 NoDisplay=True
-X-Desktop-File-Install-Version=0.20
+X-DEBB-Autostart=True

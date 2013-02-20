@@ -1,8 +1,7 @@
 [Desktop Entry]
-Categories=Game;LogicGame;
 Encoding=UTF-8
-Name=Closure
-Exec=/home/infestator/opt/games/Closure/Closure/Closure.bin.x86_64
-Icon=/home/infestator/opt/games/Closure/Closure/Closure.png
+Name=DEBB Applet
+Exec=debb-applet
 Type=Application
-X-Desktop-File-Install-Version=0.20
+NoDisplay=True
+X-DEBB-Autostart=True

@@ -1,0 +1,82 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+
+<Menu>
+
+  <Name>Applications</Name>
+  <Directory>DEBB-Applications.directory</Directory>
+
+  <DefaultAppDirs/>
+  <DefaultDirectoryDirs/>
+
+  <DefaultMergeDirs/>
+
+  <Menu>
+    <Name>Development</Name>
+    <Directory>debb-dev.directory</Directory>
+    <Include>
+      <Category>Development</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>Games</Name>
+    <Directory>debb-game.directory</Directory>
+    <Include>
+      <Category>Game</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>Graphics</Name>
+    <Directory>debb-graphics.directory</Directory>
+    <Include>
+      <Category>Graphics</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>Network</Name>
+    <Directory>debb-web.directory</Directory>
+    <Include>
+      <Category>Network</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>Multimedia</Name>
+    <Directory>debb-media.directory</Directory>
+    <Include>
+      <Category>AudioVideo</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>Office</Name>
+    <Directory>debb-office.directory</Directory>
+    <Include>
+      <Category>Office</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>System</Name>
+    <Directory>debb-system.directory</Directory>
+    <Include>
+      <Category>System</Category>
+    </Include>
+  </Menu>
+
+  <Menu>
+    <Name>Other</Name>
+    <Directory>debb-other.directory</Directory>
+    <OnlyUnallocated/>
+  </Menu>
+
+   <Layout>
+     <Merge type="menus" />
+     <Menuname>Other</Menuname>
+     <Merge type="files" />
+   </Layout>
+
+</Menu>
