@@ -9,6 +9,7 @@ class CommandServer(threading.Thread):
         except:
             pass
         self.__running = True
+        self.__address = address
         threading.Thread.__init__(self)
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.bind(address)
@@ -32,6 +33,10 @@ class CommandServer(threading.Thread):
         self.__socket.close()
             
     def stop(self):
+        try:
+            os.remove(self.__address)
+        except:
+            pass
         self.__running = False;
 
 class CommandListener:

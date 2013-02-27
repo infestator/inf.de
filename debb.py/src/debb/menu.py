@@ -3,7 +3,7 @@ import xdg.IconTheme
 import xdg.Menu
 import launcher
 
-class AppMenu(gtk.Menu):
+class Menu(gtk.Menu):
 
     def __init__(self, menu_file=None, icon_theme=None):
         gtk.Menu.__init__(self)
@@ -51,8 +51,14 @@ class AppMenu(gtk.Menu):
     def get_applications_icon(self):
         return self.__applications_icon
 
+def merge_menu_entries(xdg_menu_entry, xdg_menu_entry_addon):
+    if not isinstance(xdg_menu_entry, xdg.Menu.MenuEntry):
+        raise TypeError(xdg_menu_entry + " is not xdg.Menu.MenuEntry type")
+    if not isinstance(xdg_menu_entry_addon, xdg.Menu.MenuEntry):
+        raise TypeError(xdg_menu_entry_addon + " is not xdg.Menu.MenuEntry type")
+
 if __name__ == "__main__":
-    menu = AppMenu("/etc/xdg/menus/gnome-applications.menu", "gnome")
+    menu = Menu("/etc/xdg/menus/gnome-applications.menu", "gnome")
     menu.connect("hide", lambda w: gtk.main_quit())
     menu.popup(None, None, None, 0, 0)
     gtk.main()

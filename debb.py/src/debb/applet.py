@@ -36,7 +36,7 @@ class Applet(threading.Thread):
         gtk.main_quit()
 
 def start():
-    menu = menu.AppMenu("/etc/xdg/menus/gnome-applications.menu", "gnome")
+    menu = menu.Menu("/etc/xdg/menus/gnome-applications.menu", "gnome")
     Applet(menu).start()
     
 if __name__ == "__main__":

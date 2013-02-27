@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Quit
+Description=Exit from application
+Type=Action
+Action=Quit
+Icon=gtk-quit

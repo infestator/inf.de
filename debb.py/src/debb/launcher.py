@@ -29,56 +29,12 @@ class LaunchedProcess:
     def kill(self):
         self.__process.kill()
 
-class Launcher(gtk.Window):
+class Launcher(gtk.Builder):
     
     def __init__(self):
-        gtk.Window.__init__(self)
-        gtk.Window.set_position(self, gtk.WIN_POS_MOUSE)
-        gtk.Window.set_resizable(self, False)
-        gtk.Window.set_type_hint(self, gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-        
-        result = gtk.Menu()
-        result.show()
-
-        buf = gtk.TextBuffer()
-        input_ = gtk.TextView(buf)
-        input_.show()
-        model = gtk.ListStore(gobject.TYPE_STRING)
-        results = gtk.TreeView(model)
-        column = gtk.TreeViewColumn()
-        results.append_column(column)
-        results.set_headers_visible(False)
-#        results.set_model(model)
-        results.show()
-        
-        def update(search_string):
-            model.append([search_string])
-        
-        def close(event=None):
-            gtk.Window.emit(self, "delete-event", event)
-        
-        def on_button_press(event):
-            if event.keyval == gtk.keysyms.Return:
-                input_.set_editable(False)
-            elif event.keyval == gtk.keysyms.Escape:
-                close(event)
-            elif event.keyval == gtk.keysyms.Down:
-                pass
-            elif event.keyval == gtk.keysyms.Up:
-                pass
-            else:
-                input_.set_editable(True)
-                update(buf.get_text(buf.get_start_iter(), buf.get_end_iter()))
-        
-        input_.connect("key-press-event", lambda w, e: on_button_press(e))
-        input_.connect("move-focus", lambda w, d: close())
-        vpane = gtk.VPaned()
-        vpane.add(input_)
-        vpane.add(results)
-        vpane.show()
-        gtk.Window.add(self, vpane)
-        gtk.Window.set_focus_child(self, vpane)
-        gtk.Window.show(self)
+        gtk.Builder.__init__(self)
+        print gtk.Builder.add_from_file(self, "../glade/launcher.glade")
+        self.get_object("window1").show()
 
 def get_processes():
     return __processes
@@ -147,5 +103,4 @@ processes = property(get_processes, None, None, None)
 
 if __name__ == "__main__":
     launcher = Launcher()
-    launcher.connect("delete-event", lambda w, x: gtk.main_quit())
     gtk.main()
