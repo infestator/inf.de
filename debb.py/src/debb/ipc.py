@@ -4,23 +4,22 @@ import threading
 class CommandServer(threading.Thread):
     
     def __init__(self, address, commandListener):
-        try:
-            os.remove(address)
-        except:
-            pass
+        if not isinstance(commandListener, CommandListener):
+            raise TypeError
         self.__running = True
         self.__address = address
         threading.Thread.__init__(self)
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.bind(address)
-        s.listen(1)
-        s.settimeout(0.1)
+        s.listen(0)
+        s.setblocking(True)
         self.__socket = s
         self.__commandListener = commandListener
         
     def run(self):
         while (self.__running):
             try:
+                # TODO implement receiving commands with length more than 1k
                 conn, _ = self.__socket.accept()
                 if conn:
                     command = conn.recv(1024)
@@ -28,8 +27,8 @@ class CommandServer(threading.Thread):
                         continue
                     conn.close()
                     self.__commandListener.accept(command)
-            except:
-                pass  
+            except Exception as e:
+                print e
         self.__socket.close()
             
     def stop(self):
@@ -40,6 +39,9 @@ class CommandServer(threading.Thread):
         self.__running = False;
 
 class CommandListener:
+    
+    def __init__(self):
+        pass
     
     def accept(self, command):
         pass
