@@ -14,9 +14,12 @@ class Daemon(ipc.CommandServer):
             def accept(self, command):
                 argv = shlex.split(command)
                 command = argv[0]
-                #getattr(self.__daemon, command)(*argv[1:])
-                threading.Thread(target=getattr(self.__daemon, command), args=argv[1:]).start()
-                return None
+                func = getattr(self.__daemon, command)
+                if len(argv) == 1:
+                    func()
+                else:
+                    func(*(argv[1:]))
+                #threading.Thread(target=getattr(self.__daemon, command), args=argv[1:]).start()
         
         ipc.CommandServer.__init__(self, address, CommandListener(self))
 
@@ -27,5 +30,8 @@ class Client:
     
     def __getattr__(self, name):
         def send(*argv):
-            self.__client.send(name + " '" + "' '".join(argv) + "'")
+            if len(argv) == 0:
+                self.__client.send(name)
+            else:
+                self.__client.send(name + " '" + "' '".join(argv) + "'")
         return send
