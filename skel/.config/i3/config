@@ -20,8 +20,37 @@ set $ws_media 5:media
 set $ws_games 6:games
 set $ws_tmp 7:tmp
 
+set $default_font -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1
+
+set $clr_focused_border
+set $clr_focused_backgr
+set $clr_focused_test
+set $clr_focused_indicator
+set $clr_focused_inactive_border
+set $clr_focused_inactive_backgr
+set $clr_focused_inactive_test
+set $clr_focused_inactive_indicator
+set $clr_unfocused_border
+set $clr_unfocused_backgr
+set $clr_unfocused_test
+set $clr_unfocused_indicator
+set $clr_urgent_border
+set $clr_urgent_backgr
+set $clr_urgent_test
+set $clr_urgent_indicator
+
+
+
+
+# colors
+# class                 border  backgr. text    indicator
+client.focused          #4c7899 #285577 #ffffff #2e9ef4
+client.focused_inactive #333333 #5f676a #ffffff #484e50
+client.unfocused        #333333 #222222 #888888 #292d2e
+client.urgent           #2f343a #900000 #ffffff #900000
+
 # font for window titles. ISO 10646 = Unicode
-font -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1
+font $default_font
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -38,7 +67,7 @@ bindsym Control+Insert exec --no-startup-id xclip -o -selection primary | xclip 
 bindsym $mod+Shift+Q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+p exec dmenu_run
+bindsym $mod+p exec dmenu_run -fn $default_font -b -nb "#222222" -nf "#888888" -sb "#285577" -sf "#ffffff"
 
 # change focus
 bindsym $mod+Left focus left
