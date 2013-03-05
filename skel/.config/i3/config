@@ -20,7 +20,8 @@ set $ws_media 5:media
 set $ws_games 6:games
 set $ws_tmp 7:tmp
 
-set $default_font -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1
+set $fnt_default -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1
+set $fnt_dmenu -*-terminus-medium-*-*-*-22-*-*-*-*-*-iso10646-1
 
 set $clr_focused_border              #4c7899
 set $clr_focused_backgr              #285577
@@ -50,7 +51,7 @@ client.unfocused        $clr_unfocused_border        $clr_unfocused_backgr      
 client.urgent           $clr_urgent_border           $clr_urgent_backgr           $clr_urgent_text           $clr_urgent_indicator
 
 # font for window titles. ISO 10646 = Unicode
-font $default_font
+font $fnt_default
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -67,7 +68,7 @@ bindsym Control+Insert exec --no-startup-id xclip -o -selection primary | xclip 
 bindsym $mod+Shift+Q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+p exec dmenu_run -fn $default_font -b -nb $clr_unfocused_text -nf $clr_unfocused_backgr -sb $clr_focused_backgr -sf $clr_focused_text
+bindsym $mod+p exec dmenu_run -fn "$fnt_dmenu" -b -nb "$clr_unfocused_backgr" -nf "$clr_unfocused_text" -sb "$clr_focused_backgr" -sf "$clr_focused_text"
 
 # change focus
 bindsym $mod+Left focus left
