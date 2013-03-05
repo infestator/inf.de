@@ -3,10 +3,10 @@
 Utility for working with power management through DBus from userspace
 
 """
-
 import dbus
+from debb.util import dbusfactory
 
-dbus_system = dbus.SystemBus()
+dbus_system = dbusfactory.create_system_bus()
 
 upower_object = dbus_system.get_object("org.freedesktop.UPower", "/org/freedesktop/UPower")
 upower = dbus.Interface(upower_object, "org.freedesktop.UPower")
