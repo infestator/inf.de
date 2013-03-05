@@ -1,19 +1,21 @@
 import gobject
 import dbus.service
+from debb.util import dbusfactory
 from debb.util import power as power_util
 
 def start():
-    dbus_session = dbus.SessionBus()
+    dbus_session = dbusfactory.create().session_bus()
+    util = power_util.create()
     
     class Power(dbus.service.Object):
         pass
         
     def changed():
-        if power_util.is_lid_closed():
-            if power_util.is_on_battery():
-                power_util.hibernate()
+        if util.is_lid_closed():
+            if util.is_on_battery():
+                util.hibernate()
             else:
-                power_util.suspend()
+                util.suspend()
 
     if any("debb.Power" == name for name in dbus_session.list_names()):
         print "Service is already running"

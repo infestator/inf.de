@@ -1,9 +1,14 @@
 import dbus.mainloop.glib
 
-dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+def create():
+    glibMainloop = dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
-def create_system_bus():
-    return dbus.SystemBus()
+    class DBusFactory:
 
-def create_session_bus():
-    return dbus.SessionBus()
+        def system_bus(self):
+            return dbus.SystemBus(mainloop=glibMainloop)
+
+        def session_bus(self):
+            return dbus.SessionBus(glibMainloop)
+        
+    return DBusFactory()
