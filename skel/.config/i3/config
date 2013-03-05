@@ -22,32 +22,32 @@ set $ws_tmp 7:tmp
 
 set $default_font -*-terminus-medium-*-*-*-18-*-*-*-*-*-iso10646-1
 
-set $clr_focused_border
-set $clr_focused_backgr
-set $clr_focused_test
-set $clr_focused_indicator
-set $clr_focused_inactive_border
-set $clr_focused_inactive_backgr
-set $clr_focused_inactive_test
-set $clr_focused_inactive_indicator
-set $clr_unfocused_border
-set $clr_unfocused_backgr
-set $clr_unfocused_test
-set $clr_unfocused_indicator
-set $clr_urgent_border
-set $clr_urgent_backgr
-set $clr_urgent_test
-set $clr_urgent_indicator
+set $clr_focused_border              #4c7899
+set $clr_focused_backgr              #285577
+set $clr_focused_text                #ffffff
+set $clr_focused_indicator           #2e9ef4
+set $clr_focused_inactive_border     #333333
+set $clr_focused_inactive_backgr     #5f676a
+set $clr_focused_inactive_text       #ffffff
+set $clr_focused_inactive_indicator  #484e50
+set $clr_unfocused_border            #333333
+set $clr_unfocused_backgr            #222222
+set $clr_unfocused_text              #888888
+set $clr_unfocused_indicator         #292d2e
+set $clr_urgent_border               #2f343a
+set $clr_urgent_backgr               #900000
+set $clr_urgent_text                 #ffffff
+set $clr_urgent_indicator            #900000
 
 
 
 
 # colors
-# class                 border  backgr. text    indicator
-client.focused          #4c7899 #285577 #ffffff #2e9ef4
-client.focused_inactive #333333 #5f676a #ffffff #484e50
-client.unfocused        #333333 #222222 #888888 #292d2e
-client.urgent           #2f343a #900000 #ffffff #900000
+# class                 border                       backgr                       text                       indicator
+client.focused          $clr_focused_border          $clr_focused_backgr          $clr_focused_text          $clr_focused_indicator
+client.focused_inactive $clr_focused_inactive_border $clr_focused_inactive_backgr $clr_focused_inactive_text $clr_focused_indicator
+client.unfocused        $clr_unfocused_border        $clr_unfocused_backgr        $clr_unfocused_text        $clr_unfocused_indicator
+client.urgent           $clr_urgent_border           $clr_urgent_backgr           $clr_urgent_text           $clr_urgent_indicator
 
 # font for window titles. ISO 10646 = Unicode
 font $default_font
@@ -67,7 +67,7 @@ bindsym Control+Insert exec --no-startup-id xclip -o -selection primary | xclip 
 bindsym $mod+Shift+Q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+p exec dmenu_run -fn $default_font -b -nb "#222222" -nf "#888888" -sb "#285577" -sf "#ffffff"
+bindsym $mod+p exec dmenu_run -fn $default_font -b -nb $clr_unfocused_text -nf $clr_unfocused_backgr -sb $clr_focused_backgr -sf $clr_focused_text
 
 # change focus
 bindsym $mod+Left focus left

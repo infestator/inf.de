@@ -1,6 +1,12 @@
 import ipc
 import shlex
 import threading
+import dbus
+
+class DBusDaemon(dbus.service.Object):
+    
+    def __init__(self, address):
+        pass
 
 class Daemon(ipc.CommandServer):
     
