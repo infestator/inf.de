@@ -2,34 +2,25 @@ from debb.util import dbusfactory
 from dbus.exceptions import DBusException
 import dbus
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GLib
+import os
 
 def create(app):
-    bus = dbusfactory.create().session_bus()
-    
-    try:
-        bus.get_name_owner("ca.desrt.dconf")
-    except DBusException:
-        bus.activate_name_owner("ca.desrt.dconf")
-    
-    writer_object = bus.get_object("ca.desrt.dconf", "/ca/desrt/dconf/Writer/user")
-    writer_properties = dbus.Interface(writer_object, "ca.desrt.dconf.Writer")
-        
-    class Conf:
-        
-        def get_all(self):
-            return writer_properties.GetAll("ca.desrt.dconf.WriterInfo")
-        
-        def get(self, name):
-            return writer_properties.Get("ca.desrt.dconf.WriterInfo", name)
-        
-        def set(self, name, value):
-            writer_properties.Write(name, [value])
-            
-    return Conf()
-    
-    
+    source = Gio.SettingsSchemaSource.new_from_directory(os.environ['HOME'] + "/src/inf/repositories/inf.de/debb.meta/schemas", None, True)
+    schema = source.lookup(app, True)
+    settings = Gio.Settings.new_full(schema, None, None)
+    return settings
+
 if __name__ == "__main__":
-    config = create("test")
-    config.set("/test/name/qwertyasdfgh", "value")
-    print config.get("name")
+#    config = create("test")
+#    config.set("/test/name/qwertyasdfgh", "value")
+#    print config.get("name")
+#    source = Gio.SettingsSchemaSource.new_from_directory(os.environ['HOME'] + "/tmp/schemas", None, True)
+#    schema = source.lookup("com.companyname.appname", True)
+#    settings = Gio.Settings.new_full(schema, None, None)
+#    print settings.get_value("mybool").unpack()
+    settings = create("debb.power-service")
+    value = settings["lid-close-action"]
+    print value
+    settings["lid-close-action"] = 1
+#    print settings["lid-close-action"]

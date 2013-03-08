@@ -1,0 +1,17 @@
+<schemalist>
+
+	<enum id="power-action">
+		<value nick="none" value="0"/>
+		<value nick="suspend" value="1"/>
+		<value nick="hibernate" value="2"/>
+		<value nick="reboot" value="3"/>
+		<value nick="poweroff" value="4"/>
+	</enum>
+
+	<schema id="debb.power-service" path="/debb/services/power/">
+		<key name="lid-close-action" enum="power-action">
+			<default>'none'</default>
+		</key>
+	</schema>
+
+</schemalist>
