@@ -1,32 +1,43 @@
-import gobject
 import dbus.service
-from debb.util import dbusfactory
+from debb.util import dbusfactory as dbusfactory_util
 from debb.util import power as power_util
+from debb.util import conf as conf_util
+from gi.repository import GObject
 
 def start():
-    dbus_session = dbusfactory.create().session_bus()
+    dbusfactory = dbusfactory_util.create()
+    dbus_session = dbusfactory.session_bus()
+    dbus_system = dbusfactory.system_bus()
+
     util = power_util.create()
-    
+    settings = conf_util.create("debb.power-service")
+        
     class Power(dbus.service.Object):
         pass
         
     def changed():
         if util.is_lid_closed():
+            actions = {
+                'none': lambda: None, 
+                'suspend': util.suspend,
+                'hibernate': util.hibernate,
+                'poweroff': util.shutdown,
+                'restart': util.restart
+            }
             if util.is_on_battery():
-                util.hibernate()
+                actions[settings['lid-close-action-battery']]()
             else:
-                util.suspend()
+                actions[settings['lid-close-action-ac']]()
 
     if any("debb.Power" == name for name in dbus_session.list_names()):
         print "Service is already running"
         return
 
-    mainloop = gobject.MainLoop()
-
-    dbus_system = dbus.SystemBus()
+    mainloop = GObject.MainLoop()
 
     dbus_session.request_name("debb.Power")
     Power(dbus_session, "/")
+    util.connect_on_change_listener(changed)
     dbus_system.add_signal_receiver(changed, "Changed", "org.freedesktop.UPower", "org.freedesktop.UPower", "/org/freedesktop/UPower")
     mainloop.run()
 
