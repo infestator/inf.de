@@ -53,6 +53,5 @@ def create():
         
         def connect_on_change_listener(self, listener):
             upower_object.connect_to_signal("Changed", listener, "org.freedesktop.UPower")
-#            dbus_system.add_signal_receiver(listener, "Changed", "org.freedesktop.UPower", "org.freedesktop.UPower", "/org/freedesktop/UPower")
 
     return Util()

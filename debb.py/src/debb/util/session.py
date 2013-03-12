@@ -19,9 +19,12 @@ def create():
             consolekit.CloseSession()
             
         def get_current_session(self):
-            print consolekit.GetCurrentSession()
+            object = dbus_system.get_object("org.freedesktop.ConsoleKit", consolekit.GetCurrentSession())
+            return dbus.Interface(object, "org.freedesktop.ConsoleKit.Session")
     
     return util()
 
 if __name__ == "__main__":
     util = create()
+    session = util.get_current_session()
+    print session.GetUser()
