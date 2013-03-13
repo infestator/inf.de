@@ -1,83 +1,89 @@
 import dbus
 import dbus.mainloop.glib
 
-def enum(**enums):
-    return type('Enum', (), enums)
-
-TYPE = enum(Session=1, System=2)
-
-def create(name_dict={}, path_dict={}, interface_dict={}, type=TYPE.Session):
-    glibMainloop = dbus.mainloop.glib.DBusGMainLoop()
-
-    bus = {
-            TYPE.Session: dbus.SystemBus,
-            TYPE.System: dbus.SystemBus
-        }[type](mainloop=glibMainloop)
-
+def _create(bus):
     class Wrapper:
 
         def __init__(self):
             self._cache = {}
-            self._dict = {}
-
-        def set_dict(self, dict):
-            self._dict = dict.copy()
-            
-        def dict_append(self, dict):
-            self._dict.update(dict)
+            self.aliases = {}
 
         def resolve_attr(self, attr):
-            if self._cache.has_key(attr):
-                return self._cache[attr]
-            elif self._dict.has_key(attr):
-                formatted_attr = self._dict[attr]
+            if self._dict.has_key(attr):
+                formatted_attr = self.aliases[attr]
             else:
-                formatted_attr = self.format_attr(attr)
-            return formatted_attr 
+                formatted_attr = self.decode_attr(attr)
+            return formatted_attr
 
         def __getattr__(self, attr):
-            attr_object = self.getattr(self.resolve_attr(attr))
-            self._cache[attr] = attr_object
+            if self._cache.has_key(attr):
+                return self._cache[attr]
+            if self.aliases.has_key(attr):
+                decoded_attr = self.aliases[attr]
+            else:
+                decoded_attr = self.decode_attr(attr)
+            encoded_attr = self.encode_attr(decoded_attr)
+            if self._cache.has_key(attr):
+                self._cache[attr] = self._cache[attr]
+                if not self._cache.has_key(encoded_attr):
+                    self._cache[encoded_attr] = self._cache[attr]
+            attr_object = self.getattr(decoded_attr)
+            if attr != encoded_attr:
+                self._cache[attr] = attr_object
+            self._cache[decoded_attr] = attr_object
+            self._cache[encoded_attr] = attr_object
             return attr_object
+
+        def __str__(self):
+            raise NotImplementedError()
 
         def getattr(self, formatted_attr):
             raise NotImplementedError()
 
-        def format_attr(self, attr):
+        def decode_attr(self, attr):
             raise NotImplementedError()
-
+        
+        def encode_attr(self, attr):
+            raise NotImplementedError()
+        
     class DBus(Wrapper):
         
-        def __init__(self):
-            Wrapper.__init__(self)
-            self.set_dict(name_dict)
-    
-        def format_attr(self, attr):
-            return attr.replace('_', '.')
-        
-        def getattr(self, name):
-            
-            class DBusName(Wrapper):
-                
-                def __init__(self):
-                    Wrapper.__init__(self)
-                    self.set_dict(path_dict)
+        def __str__(self):
+            return bus.__str__()
 
-                def format_attr(self, attr):
+        def decode_attr(self, attr):
+            return attr.replace('_', '.')
+
+        def encode_attr(self, attr):
+            return attr.replace('.', '_')
+
+        def getattr(self, name):
+
+            class DBusName(Wrapper):
+
+                def __str__(self):
+                    return name
+
+                def decode_attr(self, attr):
                     return '/' + attr.replace('_', '/')
-        
+
+                def encode_attr(self, attr):
+                    return attr[1:].replace('/', '_')
+
                 def getattr(self, path):
-                    
+
                     dbus_object = bus.get_object(name, path)
 
                     class DBusObject(Wrapper):
+                        
+                        def __str__(self):
+                            return path
 
-                        def __init__(self):
-                            Wrapper.__init__(self)
-                            self.set_dict(interface_dict)
-
-                        def format_attr(self, attr):
+                        def decode_attr(self, attr):
                             return attr.replace('_', '.')
+                        
+                        def encode_attr(self, attr):
+                            return attr.replace('.', '_')
         
                         def subscribe(self, signal, handler, interface):
                             print dbus_object.connect_to_signal(signal, handler, self.resolve_attr(interface))
@@ -92,18 +98,16 @@ def create(name_dict={}, path_dict={}, interface_dict={}, type=TYPE.Session):
     return DBus()
 
 if __name__ == "__main__":
-    bus = create(
-                 name_dict={"ConsoleKit": "org.freedesktop.ConsoleKit"},
-                 path_dict={"Manager": "/org/freedesktop/ConsoleKit/Manager"},
-                 interface_dict={"Manager": "org.freedesktop.ConsoleKit.Manager"}
-             )
-    interface_dict={"Manager1": "org.freedesktop.ConsoleKit.Manager"}
-    iface = bus.ConsoleKit.Manager
-    iface.dict_append(interface_dict)
-    
-    def handler(*args):
-        print "Handler"
-    
-    manager = bus.ConsoleKit.Manager.Manager1
-    iface.subscribe("IdleHintChanged", handler, "Manager")
-    print manager.GetCurrentSession()
+    bus = _create(dbus.SystemBus())
+    bus.aliases["ConsoleKit"] = "org.freedesktop.ConsoleKit"
+    bus.ConsoleKit.aliases["Manager"] = "/org/freedesktop/ConsoleKit/Manager"
+    bus.ConsoleKit.Manager.aliases["Main"] = "org.freedesktop.ConsoleKit.Manager"
+    bus.ConsoleKit.Manager.aliases["Properties"] = "org.freedesktop.DBus.Properties"
+    print bus.org_freedesktop_ConsoleKit.org_freedesktop_ConsoleKit_Manager.org_freedesktop_ConsoleKit_Manager.GetCurrentSession()
+    bus.ConsoleKit.aliases["CurrentSession"] = bus.ConsoleKit.Manager.Main.GetCurrentSession()
+    bus.ConsoleKit.CurrentSession.aliases["Main"] = "org.freedesktop.ConsoleKit.Session"
+    print bus.ConsoleKit.CurrentSession.Main.GetUnixUser()
+    print bus.ConsoleKit
+    print bus.ConsoleKit.Manager
+    print bus.ConsoleKit.Manager.Main
+    print bus.ConsoleKit.Manager.Properties.GetAll("org.freedesktop.DBus.Properties")
