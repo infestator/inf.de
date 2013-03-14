@@ -33,6 +33,9 @@ def _create(bus):
             self._cache[decoded_attr] = attr_object
             self._cache[encoded_attr] = attr_object
             return attr_object
+        
+        def __getitem__(self, item):
+            return self.__getattr__(self.encode_attr(item))
 
         def __str__(self):
             raise NotImplementedError()
@@ -45,7 +48,7 @@ def _create(bus):
         
         def encode_attr(self, attr):
             raise NotImplementedError()
-        
+
     class DBus(Wrapper):
         
         def __str__(self):
@@ -89,7 +92,25 @@ def _create(bus):
                             print dbus_object.connect_to_signal(signal, handler, self.resolve_attr(interface))
         
                         def getattr(self, interface):
-                            return dbus.Interface(dbus_object, interface)
+                            interface = dbus.Interface(dbus_object, interface)
+                            class DBusInterface:
+                                
+                                def __init__(self):
+                                    self.converters = {}
+                                
+                                def __getattr__(self, attr):
+                                    def handler(*args, **kwargs):
+                                        result = getattr(interface, attr)(*args, **kwargs)
+                                        if self.converters.has_key(attr):
+                                            return self.converters[attr](result)
+                                        else:
+                                            return result
+                                    return handler
+                                
+                                def __str__(self):
+                                    return interface.__str__()
+                            
+                            return DBusInterface()
 
                     return DBusObject()
 
@@ -97,17 +118,5 @@ def _create(bus):
 
     return DBus()
 
-if __name__ == "__main__":
-    bus = _create(dbus.SystemBus())
-    bus.aliases["ConsoleKit"] = "org.freedesktop.ConsoleKit"
-    bus.ConsoleKit.aliases["Manager"] = "/org/freedesktop/ConsoleKit/Manager"
-    bus.ConsoleKit.Manager.aliases["Main"] = "org.freedesktop.ConsoleKit.Manager"
-    bus.ConsoleKit.Manager.aliases["Properties"] = "org.freedesktop.DBus.Properties"
-    print bus.org_freedesktop_ConsoleKit.org_freedesktop_ConsoleKit_Manager.org_freedesktop_ConsoleKit_Manager.GetCurrentSession()
-    bus.ConsoleKit.aliases["CurrentSession"] = bus.ConsoleKit.Manager.Main.GetCurrentSession()
-    bus.ConsoleKit.CurrentSession.aliases["Main"] = "org.freedesktop.ConsoleKit.Session"
-    print bus.ConsoleKit.CurrentSession.Main.GetUnixUser()
-    print bus.ConsoleKit
-    print bus.ConsoleKit.Manager
-    print bus.ConsoleKit.Manager.Main
-    print bus.ConsoleKit.Manager.Properties.GetAll("org.freedesktop.DBus.Properties")
+system = _create(dbus.SystemBus())
+session = _create(dbus.SessionBus())
