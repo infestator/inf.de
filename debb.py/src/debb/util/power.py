@@ -3,55 +3,54 @@
 Utility for working with power management through DBus from userspace
 
 """
-import dbus
-from debb.util import dbusfactory
+from debb.util.dbuswrappers import upower
+from debb.util.dbuswrappers import consolekit
+from debb.util.dbuswrappers import wrapper
 
 def create():
-    dbus_system = dbusfactory.create().system_bus()
-
-    upower_object = dbus_system.get_object("org.freedesktop.UPower", "/org/freedesktop/UPower")
-    upower = dbus.Interface(upower_object, "org.freedesktop.UPower")
-    upower_properties = dbus.Interface(upower_object, "org.freedesktop.DBus.Properties")
-
-    consolekit_object = dbus_system.get_object("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager")
-    consolekit = dbus.Interface(consolekit_object, "org.freedesktop.ConsoleKit.Manager")
+    upower_object = wrapper.system.upower.upower
+    upower_upower = upower_object.upower
+    upower_properties = upower_object.properties
+    
+    consolekit_object = wrapper.system.consolekit.consolekit
+    consolekit_manager = consolekit_object.consolekit
 
     class Util:
 
         def suspend(self):
-            return upower.Suspend()
+            upower_upower.Suspend()
 
         def hibernate(self):
-            return upower.Hibernate()
+            upower_upower.Hibernate()
 
         def shutdown(self):
-            return consolekit.Stop()
+            return consolekit_manager.Stop()
 
         def restart(self):
-            return consolekit.Restart()
+            return consolekit_manager.Restart()
 
         def is_suspend_allowed(self):
-            return bool(upower.SuspendAllowed())
+            return upower_upower.SuspendAllowed()
 
         def is_hibernate_allowed(self):
-            return bool(upower.HibernateAllowed())
+            return upower_upower.HibernateAllowed()
 
         def is_shutdown_allowed(self):
-            return bool(consolekit.CanStop())
+            return consolekit_manager.CanStop()
 
         def is_restart_allowed(self):
-            return bool(consolekit.CanRestart())
+            return consolekit_manager.CanRestart()
 
         def is_on_battery(self):
-            return bool(upower_properties.Get("org.freedesktop.UPower", 'OnBattery'))
+            return upower_properties.Get("org.freedesktop.UPower", 'OnBattery')
 
         def is_lid_present(self):
-            return bool(upower_properties.Get("org.freedesktop.UPower", 'LidIsPresent'))
+            return upower_properties.Get("org.freedesktop.UPower", 'LidIsPresent')
 
         def is_lid_closed(self):
-            return bool(upower_properties.Get("org.freedesktop.UPower", 'LidIsClosed'))
+            return upower_properties.Get("org.freedesktop.UPower", 'LidIsClosed')
         
         def connect_on_change_listener(self, listener):
-            upower_object.connect_to_signal("Changed", listener, "org.freedesktop.UPower")
+            upower_object.subscribe("Changed", listener, upower_object.upower)
 
     return Util()

@@ -38,7 +38,6 @@ def start():
     dbus_session.request_name("debb.Power")
     Power(dbus_session, "/")
     util.connect_on_change_listener(changed)
-    dbus_system.add_signal_receiver(changed, "Changed", "org.freedesktop.UPower", "org.freedesktop.UPower", "/org/freedesktop/UPower")
     mainloop.run()
 
 if __name__ == '__main__':

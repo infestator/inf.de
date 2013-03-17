@@ -1,7 +1,12 @@
 import dbus
 import dbus.mainloop.glib
 
-def _create(bus):
+__all__= ["system", "session"]
+
+def _create(bus_factory):
+    mainLoop = dbus.mainloop.glib.DBusGMainLoop()
+    bus = bus_factory(mainloop=mainLoop)
+    
     class Wrapper:
 
         def __init__(self):
@@ -89,10 +94,10 @@ def _create(bus):
                             return attr.replace('.', '_')
         
                         def subscribe(self, signal, handler, interface):
-                            print dbus_object.connect_to_signal(signal, handler, self.resolve_attr(interface))
+                            print dbus_object.connect_to_signal(signal, handler, interface.__str__())
         
                         def getattr(self, interface):
-                            interface = dbus.Interface(dbus_object, interface)
+                            object_interface = dbus.Interface(dbus_object, interface)
                             class DBusInterface:
                                 
                                 def __init__(self):
@@ -100,7 +105,7 @@ def _create(bus):
                                 
                                 def __getattr__(self, attr):
                                     def handler(*args, **kwargs):
-                                        result = getattr(interface, attr)(*args, **kwargs)
+                                        result = getattr(object_interface, attr)(*args, **kwargs)
                                         if self.converters.has_key(attr):
                                             return self.converters[attr](result)
                                         else:
@@ -108,7 +113,7 @@ def _create(bus):
                                     return handler
                                 
                                 def __str__(self):
-                                    return interface.__str__()
+                                    return interface
                             
                             return DBusInterface()
 
@@ -118,5 +123,5 @@ def _create(bus):
 
     return DBus()
 
-system = _create(dbus.SystemBus())
-session = _create(dbus.SessionBus())
+system = _create(dbus.SystemBus)
+session = _create(dbus.SessionBus)
