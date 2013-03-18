@@ -9,9 +9,10 @@ def _create(bus_factory):
     
     class Wrapper:
 
-        def __init__(self):
+        def __init__(self, object=None):
             self._cache = {}
             self.aliases = {}
+            self._object = object
 
         def resolve_attr(self, attr):
             if self._dict.has_key(attr):
@@ -21,6 +22,12 @@ def _create(bus_factory):
             return formatted_attr
 
         def __getattr__(self, attr):
+            try:
+                self_attr = getattr(self._object, attr)
+                if not isinstance(self_attr, dbus.proxies._DeferredMethod):
+                    return self_attr
+            except AttributeError:
+                pass
             if self._cache.has_key(attr):
                 return self._cache[attr]
             if self.aliases.has_key(attr):
@@ -55,7 +62,7 @@ def _create(bus_factory):
             raise NotImplementedError()
 
     class DBus(Wrapper):
-        
+
         def __str__(self):
             return bus.__str__()
 
@@ -64,6 +71,9 @@ def _create(bus_factory):
 
         def encode_attr(self, attr):
             return attr.replace('.', '_')
+
+        def list_names(self):
+            return bus.list_names()
 
         def getattr(self, name):
 
@@ -94,7 +104,7 @@ def _create(bus_factory):
                             return attr.replace('.', '_')
         
                         def subscribe(self, signal, handler, interface):
-                            print dbus_object.connect_to_signal(signal, handler, interface.__str__())
+                            dbus_object.connect_to_signal(signal, handler, interface.__str__())
         
                         def getattr(self, interface):
                             object_interface = dbus.Interface(dbus_object, interface)
@@ -117,11 +127,11 @@ def _create(bus_factory):
                             
                             return DBusInterface()
 
-                    return DBusObject()
+                    return DBusObject(dbus_object)
 
             return DBusName()
 
-    return DBus()
+    return DBus(bus)
 
 system = _create(dbus.SystemBus)
 session = _create(dbus.SessionBus)

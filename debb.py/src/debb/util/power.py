@@ -51,6 +51,6 @@ def create():
             return upower_properties.Get("org.freedesktop.UPower", 'LidIsClosed')
         
         def connect_on_change_listener(self, listener):
-            upower_object.subscribe("Changed", listener, upower_object.upower)
+            upower_object.connect_to_signal("Changed", listener, str(upower_object.upower))
 
     return Util()

@@ -4,10 +4,10 @@ from debb.util import power as power_util
 from debb.util import conf as conf_util
 from gi.repository import GObject
 
+from debb.util.dbuswrappers.wrapper import system  as dbus_system
+from debb.util.dbuswrappers.wrapper import session as dbus_session
+
 def start():
-    dbusfactory = dbusfactory_util.create()
-    dbus_session = dbusfactory.session_bus()
-    dbus_system = dbusfactory.system_bus()
 
     util = power_util.create()
     settings = conf_util.create("debb.power-service")
@@ -35,6 +35,7 @@ def start():
 
     mainloop = GObject.MainLoop()
 
+    dbus_session.request_name("debb.Power1")
     dbus_session.request_name("debb.Power")
     Power(dbus_session, "/")
     util.connect_on_change_listener(changed)

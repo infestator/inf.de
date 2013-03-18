@@ -6,7 +6,7 @@ from gi.repository import Gtk, Gio, GLib
 import os
 
 def create(app):
-    source = Gio.SettingsSchemaSource.new_from_directory(os.environ['HOME'] + "/src/inf/repositories/github.com/inf.de/debb.meta/schemas", None, True)
+    source = Gio.SettingsSchemaSource.new_from_directory(os.environ['HOME'] + "/src/inf/repositories/inf.de/debb.meta/schemas", None, True)
     schema = source.lookup(app, True)
     settings = Gio.Settings.new_full(schema, None, None)
 
