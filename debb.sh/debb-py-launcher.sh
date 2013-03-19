@@ -9,7 +9,8 @@ fi
 
 PYTHON_VERSION=$(python --version 2>&1 | sed -re 's/^Python ([0-9]+\.[0-9]+)\.[0-9]+$/\1/')
 
-export DEBB_PYTHONPATH=${DEBB_HOME}/share/debb/python
+export DEBB_HOME
+DEBB_PYTHONPATH=${DEBB_HOME}/share/debb/python
 export PYTHONPATH=${DEBB_PYTHONPATH}:${PYTHON_PATH}
 
 IFS='-' read -a BASENAME <<< "$(basename "$0")"
