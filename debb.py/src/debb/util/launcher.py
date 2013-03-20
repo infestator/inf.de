@@ -1,15 +1,15 @@
+"""
+Simple utility module which launches applications (as desktop entries) and manages them using list. 
+"""
+
 import os
 import subprocess
 import re
 import shlex
-import gtk
-import gtk.gdk
-from dbus import gobject_service
-import gobject
 
-__processes = list()
+_processes = list()
 
-__path = os.environ['PATH'].split(os.pathsep)
+_path = os.environ['PATH'].split(os.pathsep)
 
 r1 = re.compile('(?<!%)%[dDnNickvm]')
 r2 = re.compile('%%')
@@ -29,15 +29,8 @@ class LaunchedProcess:
     def kill(self):
         self.__process.kill()
 
-class Launcher(gtk.Builder):
-    
-    def __init__(self):
-        gtk.Builder.__init__(self)
-        print gtk.Builder.add_from_file(self, "../glade/launcher.glade")
-        self.get_object("window1").show()
-
 def get_processes():
-    return __processes
+    return _processes
 
 def __parse_command(command, files=[], urls=[]):
     pieces = shlex.split(command)
@@ -81,26 +74,22 @@ def __parse_command(command, files=[], urls=[]):
 def launch(desktop_entry, files=[], urls=[]):
     command_line = r1.sub('', desktop_entry.getExec())
     args = __parse_command(command_line, files, urls)
-    process = subprocess.Popen(args)
+    process = subprocess.Popen(args, env=os.environ)
     launched_process = LaunchedProcess(desktop_entry, process)
-    __processes.append(launched_process)
+    _processes.append(launched_process)
     return launched_process
 
 def kill_all():
-    for launched_process in __processes:
+    for launched_process in _processes:
         launched_process.kill()
 
 def __locate(command):
     if os.path.exists(command):
         return command
-    for path in __path:
+    for path in _path:
         commandPath = path + os.sep + command
         if os.path.exists(commandPath):
             return commandPath
     raise Exception('Unable to find executable for ' + command)
 
 processes = property(get_processes, None, None, None)
-
-if __name__ == "__main__":
-    launcher = Launcher()
-    gtk.main()

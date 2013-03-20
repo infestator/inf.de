@@ -51,6 +51,9 @@ def _create(bus_factory):
 
         def __str__(self):
             raise NotImplementedError()
+        
+        def __dir__(self):
+            return []
 
         def getattr(self, formatted_attr):
             raise NotImplementedError()

@@ -35,7 +35,6 @@ def start():
 
     mainloop = GObject.MainLoop()
 
-    dbus_session.request_name("debb.Power1")
     dbus_session.request_name("debb.Power")
     Power(dbus_session, "/")
     util.connect_on_change_listener(changed)
