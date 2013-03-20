@@ -15,10 +15,10 @@
 	</enum>
 
 	<schema id="debb.power-service" path="/debb/services/power/">
-		<key name="lid-close-action-ac" enum="lid-close-action">
+		<key name="lid-close-action-ac" enum="lid-close-actions">
 			<default>'none'</default>
 		</key>
-		<key name="lid-close-action-battery" enum='lig-close-action'>
+		<key name="lid-close-action-battery" enum='lid-close-actions'>
 			<default>'none'</default>
 		</key>
 	</schema>

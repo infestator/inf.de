@@ -1,10 +1,10 @@
 #!/bin/bash
 
 if [ -z "${DEBB_HOME}" ]; then
-	DEBB_HOME=$(dirname $(dirname $0))
-	if [ "${DEBB_HOME}" == "." ]; then
-		DEBB_HOME=$(dirname $(pwd))
-	fi
+    DEBB_HOME=$(dirname $(dirname $0))
+    if [ "${DEBB_HOME}" == "." ]; then
+        DEBB_HOME=$(dirname $(pwd))
+    fi
 fi
 
 PYTHON_VERSION=$(python --version 2>&1 | sed -re 's/^Python ([0-9]+\.[0-9]+)\.[0-9]+$/\1/')
@@ -19,11 +19,11 @@ NAME="${BASENAME[1]}"
 TYPE="${BASENAME[2]}"
 
 if [ -z "${TYPE}" ]; then
-	SCRIPT="debb/${NAME}.py"
+    MODULE="debb.${BASENAME[1]}"
 else
-	SCRIPT="debb/${TYPE}/${NAME}.py"
+    MODULE="debb.${BASENAME[2]}.${BASENAME[1]}"
 fi
 
-#echo $PYTHON_PATH
+mkdir -p ${DEBB_HOME}/log
 
-python "${DEBB_PYTHONPATH}/${SCRIPT}"
+python -m ${MODULE} $* 2> "${DEBB_HOME}/log/${MODULE_NAME}.err" 1> "${DEBB_HOME}/log/${MODULE_NAME}.log"

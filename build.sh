@@ -12,4 +12,7 @@ cp -r debb.py/src/* build/share/debb/python
 cp -d debb.sh/* build/bin
 cp -r debb.meta/* build/share
 
+echo "Compile"
+glib-compile-schemas build/share/schemas
+
 echo "Done"
