@@ -1,4 +1,3 @@
-from debb.util import dbusfactory
 from dbus.exceptions import DBusException
 import dbus
 

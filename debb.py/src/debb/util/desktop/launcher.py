@@ -17,22 +17,22 @@ r2 = re.compile('%%')
 class LaunchedProcess:
     
     def __init__(self, xdgEntry, process):
-        self.__xdgEntry = xdgEntry
-        self.__process = process
+        self._xdgEntry = xdgEntry
+        self._process = process
         
     def poll(self):
-        return self.__process.poll()
+        return self._process.poll()
     
     def wait(self):
-        return self.__process.wait()
+        return self._process.wait()
         
     def kill(self):
-        self.__process.kill()
+        self._process.kill()
 
 def get_processes():
     return _processes
 
-def __parse_command(command, files=[], urls=[]):
+def _parse_command(command, files=[], urls=[]):
     pieces = shlex.split(command)
 
     def substitute_single(pieces, index, values):
@@ -56,7 +56,7 @@ def __parse_command(command, files=[], urls=[]):
         else:
             raise ValueError('Command is not supported')
 
-    pieces[0] = __locate(pieces[0])
+    pieces[0] = _locate(pieces[0])
 
     for i in range(len(pieces)):
         index = [i]
@@ -73,7 +73,7 @@ def __parse_command(command, files=[], urls=[]):
 
 def launch(desktop_entry, files=[], urls=[]):
     command_line = r1.sub('', desktop_entry.getExec())
-    args = __parse_command(command_line, files, urls)
+    args = _parse_command(command_line, files, urls)
     process = subprocess.Popen(args, env=os.environ)
     launched_process = LaunchedProcess(desktop_entry, process)
     _processes.append(launched_process)
@@ -83,7 +83,7 @@ def kill_all():
     for launched_process in _processes:
         launched_process.kill()
 
-def __locate(command):
+def _locate(command):
     if os.path.exists(command):
         return command
     for path in _path:

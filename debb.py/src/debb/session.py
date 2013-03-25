@@ -11,14 +11,15 @@ import threading
 _autostart_entries = {}
 application_entries = {}
 
-def start(window_manager="x-terminal-emulator", restarts_count=3):
+def start(window_manager="gvim", restarts_count=3):
     
     mainloop = GObject.MainLoop()
     process = None
     
     dbus_session = wrapper.session
     
-    def calculate_entries(dirs, location):
+    # TODO move to util
+    def _calculate_entries(dirs, location):
         entries = {}
         for directory in dirs:
             try:
@@ -37,18 +38,20 @@ def start(window_manager="x-terminal-emulator", restarts_count=3):
                 pass
         return entries
     
-    def calculate_applications_entries():
-        return calculate_entries(xdg.DesktopEntry.xdg_data_dirs, "applications")
+    # TODO move to util
+    def _calculate_applications_entries():
+        return _calculate_entries(xdg.DesktopEntry.xdg_data_dirs, "applications")
     
+    # TODO move to util
     def calculate_autostart_entries():
-        return calculate_entries(xdg.DesktopEntry.xdg_config_dirs, "autostart")
+        return _calculate_entries(xdg.DesktopEntry.xdg_config_dirs, "autostart")
     
     class Session(dbus.service.Object):
 
         @dbus.service.method("debb.Session")
         def start(self):
             self._restarts_count = 3
-            application_entries = calculate_applications_entries()
+            application_entries = _calculate_applications_entries()
             autostart_entries = calculate_autostart_entries().values()
             
             for autostart_entry in _autostart_entries:

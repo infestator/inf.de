@@ -78,6 +78,11 @@ def _create(bus_factory):
         def list_names(self):
             return bus.list_names()
 
+        def is_service_running(self, bus_name):
+            if any(bus_name == name for name in self.list_names()):
+                return True
+            return False
+
         def getattr(self, name):
 
             class DBusName(Wrapper):
