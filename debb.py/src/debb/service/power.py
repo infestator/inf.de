@@ -1,5 +1,5 @@
 import dbus.service
-from debb.util import dbusfactory as dbusfactory_util
+from debb.util import dbusfactory as dbusfactory_util, proc
 from debb.util import power as power_util
 from debb.util import conf as conf_util
 from gi.repository import GObject
@@ -29,7 +29,7 @@ def start():
             else:
                 actions[settings['lid-close-action-ac']]()
 
-    if any("debb.Power" == name for name in dbus_session.list_names()):
+    if dbus_session.is_service_running("debb.Power"):
         print "Service is already running"
         return
 
@@ -41,4 +41,5 @@ def start():
     mainloop.run()
 
 if __name__ == '__main__':
+    proc.set_proc_name("DEBB Power Service")
     start()
