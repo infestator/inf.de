@@ -17,8 +17,16 @@ def start(window_manager=None):
     
     mainloop = GObject.MainLoop()
 
-#    settings = conf_util.create("debb.Session")
-    
+    settings = conf_util.create("debb.Session")
+
+    def open_session(self):
+        for application in apps.autostart_entries:
+            launcher.launch(apps.autostart_entries[application])
+        self._process = launcher.launch(apps.entries[settings["window-manager"]])
+        result = self._process.wait()
+        GObject.idle_add(self.on_close, result)
+            
+                
     class Session(dbus.service.Object):
 
         def __init__(self, restarts_count, *args, **kwargs):
@@ -31,16 +39,8 @@ def start(window_manager=None):
         def open(self):
             if self._process is not None:
                 raise ValueError("Session is already running")
-            threading.Thread(target=self._open).start()
+            threading.Thread(target=open_session, args=(self)).start()
         
-        def _open(self):
-#            for application in apps.autostart_entries:
-#                launcher.launch(apps.autostart_entries[application])
-            self._process = launcher.launch(apps.entries[window_manager])
-            result = self._process.wait()
-            GObject.idle_add(self.on_close, result)
-            
-                
         @dbus.service.signal("debb.Session")
         def on_close(self, result):
             self._process = None

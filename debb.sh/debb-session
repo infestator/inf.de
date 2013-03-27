@@ -1,1 +1,5 @@
-debb-power-service
+#!/bin/sh
+
+. $(dirname $0)/debb-env.sh
+
+debb-session-service

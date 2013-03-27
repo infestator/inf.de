@@ -1,0 +1,9 @@
+<schemalist>
+
+	<schema id="debb.session-service" path="/debb/services/power/">
+		<key name="window-manager" type="s">
+			<default>'i3'</default>
+		</key>
+	</schema>
+
+</schemalist>
