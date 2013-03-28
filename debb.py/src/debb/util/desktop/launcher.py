@@ -32,8 +32,8 @@ class LaunchedProcess:
 def get_processes():
     return _processes
 
-def _parse_command(command, files=[], urls=[]):
-    pieces = shlex.split(command)
+def _parse_command(func, files=[], urls=[]):
+    pieces = shlex.split(func)
 
     def substitute_single(pieces, index, values):
         i = index[0]
@@ -83,13 +83,13 @@ def kill_all():
     for launched_process in _processes:
         launched_process.kill()
 
-def _locate(command):
-    if os.path.exists(command):
-        return command
+def _locate(func):
+    if os.path.exists(func):
+        return func
     for path in _path:
-        commandPath = path + os.sep + command
+        commandPath = path + os.sep + func
         if os.path.exists(commandPath):
             return commandPath
-    raise Exception('Unable to find executable for ' + command)
+    raise Exception('Unable to find executable for ' + func)
 
 processes = property(get_processes, None, None, None)
